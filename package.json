@@ -19,7 +19,9 @@
     "colors": "^1.4.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "mongoose": "^6.2.7"
+    "express-async-handler": "^1.2.0",
+    "mongoose": "^6.2.7",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "concurrently": "^7.0.0"
