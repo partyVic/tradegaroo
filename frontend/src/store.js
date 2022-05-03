@@ -9,7 +9,6 @@ const store = configureStore({
         productList: productListReducer
     },
     initialState,
-    middleware: [],
     devTools: process.env.NODE_ENV !== 'production', //only show devTools when in production
 })
 

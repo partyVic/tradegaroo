@@ -1,29 +1,38 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { Row, Col } from 'react-bootstrap'
 import Product from '../components/Product.js'
+import { listProducts } from '../actions/productActions.js'
 
 const HomeScreen = () => {
-    const [products, setProducts] = useState([])
+
+    // useDispatch is used to dispatch or call in an action
+    const dispatch = useDispatch()
+
+    // useSelector is used to select parts of the state
+    // productList is same as defined in the store reducer
+    const productList = useSelector(state => state.productList)
+    const { loading, error, products } = productList
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            const { data } = await axios.get('/api/products')
-            setProducts(data)
-        }
-        fetchProducts()
-    }, [])
+        dispatch(listProducts())
+    }, [dispatch])
 
     return (
         <>
             <h1>Latest Products</h1>
-            <Row>
-                {products.map(product => (
-                    <Col sm={12} md={6} lg={4} xl={3} key={product._id} className='align-items-stretch d-flex'>
-                        <Product product={product} />
-                    </Col>
-                ))}
-            </Row>
+            {loading
+                ? (<h2>Loading...</h2>)
+                : error
+                    ? (<h3>{error}</h3>)
+                    : <Row>
+                        {products.map(product => (
+                            <Col sm={12} md={6} lg={4} xl={3} key={product._id} className='align-items-stretch d-flex'>
+                                <Product product={product} />
+                            </Col>
+                        ))}
+                    </Row>}
         </>
     )
 }
