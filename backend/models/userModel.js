@@ -43,6 +43,22 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 
 
+// mongoose middleware:  set certain things to happen on saves/finds and other actions and other methods
+
+// Before we make create/save action, run this middleware to encrypt the password
+userSchema.pre('save', async function (next) {
+
+    // !!!only do this if the password field is sent or it's modified !!!
+    // if we just update user name profile without changing password, don't run this middleware
+    // use mongoose method isModified() to check if password has changed
+    if (!this.isModified('password')) {
+        return next()   // make sure add return, then the rest of the code will not run
+    }
+
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
+})
+
 const User = mongoose.model('User', userSchema)
 
 export default User
