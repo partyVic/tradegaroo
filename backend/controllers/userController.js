@@ -29,7 +29,31 @@ const authUser = asyncHandler(async (req, res) => {
     }
 })
 
-export { authUser }
+
+
+// @desc    Get user profile
+// @route   GET /api/users/profile
+// @access  Private
+const getUserProfile = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id) // req.user data is from authMiddleware once user is loggin
+
+    // if the user is loggin
+    if (user) {
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+        })
+    } else {
+        res.status(404)
+        throw new Error('User not found')
+    }
+})
+
+
+
+export { authUser, getUserProfile }
 
 
 // req.body userfull tips:

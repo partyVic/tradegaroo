@@ -16,7 +16,7 @@ const app = express()
 app.use(express.json()) // allow us to accept JSON data in the req.body
 
 // used for show the log of requests. Put before any route handlers
-app.use(morgan('dev'))
+// app.use(morgan('dev'))
 
 
 app.get('/', (req, res) => {
