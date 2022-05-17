@@ -90,8 +90,50 @@ const getUserProfile = asyncHandler(async (req, res) => {
 })
 
 
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id) // req.user data is from authMiddleware once user is loggin
 
-export { authUser, registerUser, getUserProfile }
+    // if the user is loggin and found
+    // modify the user profile
+    if (user) {
+        user.name = req.body.name || user.name
+
+        //check if email is sent from req.body and prevent duplicate email
+        const userEmailExists = await User.findOne({ email: req.body.email });
+        if (userEmailExists) {
+            res.status(400); //bad request
+            throw new Error("Email already in Use");
+        } else {
+            user.email = req.body.email || user.email
+        }
+
+        //check if a password is sent and modify
+        if (req.body.password){
+            user.password = req.body.password  //password will be encrypted automatically by userModel
+        }
+
+        const updatedUser = await user.save()
+
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
+            token: generateToken(updatedUser._id)
+        })
+
+    } else {
+        res.status(404)
+        throw new Error('User not found')
+    }
+})
+
+
+
+export { authUser, registerUser, getUserProfile, updateUserProfile }
 
 
 // req.body userfull tips:
