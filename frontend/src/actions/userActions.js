@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGIN_FAIL, USER_LOGOUT, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_FAIL_CLEARING_STATE, USER_DETAILS_RESET, USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, USER_DETAILS_FAIL } from "../constants/userConstants"
+import { USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGIN_FAIL, USER_LOGOUT, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_FAIL_CLEARING_STATE, USER_DETAILS_RESET, USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, USER_DETAILS_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_PROFILE_FAIL } from "../constants/userConstants"
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -43,6 +43,7 @@ export const login = (email, password) => async (dispatch) => {
 
 export const logout = () => (dispatch) => {
     localStorage.removeItem("userInfo")
+    localStorage.removeItem('cartItems')
     dispatch({ type: USER_LOGOUT })
     dispatch({ type: USER_DETAILS_RESET })
 }
@@ -128,14 +129,67 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         })
 
     } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message
+
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout())
+        }
         dispatch({
             type: USER_DETAILS_FAIL,
+            payload: message,
+        })
+    }
+}
 
-            // generic way to write the payload with error message
-            payload:
-                error.response && error.response.data.message
-                    ? error.response.data.message
-                    : error.message
+
+export const updateUserProfile = (user) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: USER_UPDATE_PROFILE_REQUEST
+        })
+
+        // get the userInfo from destructure the getState()
+        // then get the token and add to the axios config
+        const { userLogin: { userInfo } } = getState()
+
+        // add Authorization to pass the user token
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+        // the user is passing from updateUserProfile function
+        // user is the data we want to update with
+        const { data } = await axios.put('/api/users/profile', user, config)
+
+        dispatch({
+            type: USER_UPDATE_PROFILE_SUCCESS,
+            payload: data
+        })
+
+        dispatch({
+            type: USER_LOGIN_SUCCESS,
+            payload: data,
+        })
+        localStorage.setItem('userInfo', JSON.stringify(data))
+
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message
+
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout())
+        }
+        dispatch({
+            type: USER_UPDATE_PROFILE_FAIL,
+            payload: message,
         })
     }
 }

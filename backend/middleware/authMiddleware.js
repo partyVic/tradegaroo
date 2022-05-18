@@ -7,7 +7,7 @@ import User from '../models/userModel.js'
 const protect = asyncHandler(async (req, res, next) => {
     let token // assign a token variable first, it will be undefined at begining
 
-    // console.log(req.headers.authorization)  // Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNmJkNzk0YWNhZGM2YzRkZTNkM2IwMiIsImlhdCI6MTY1MjQwNTUyMCwiZXhwIjoxNjU0OTk3NTIwfQ.K3i7Wbw8ZtjBwW1-6JRQ0Vwt792Sw5raftwHFeLz3ME
+    // console.log(req.headers.authorization)  // Bearer <token>
 
     // check the token start with Bearer
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
