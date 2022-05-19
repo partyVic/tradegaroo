@@ -4,6 +4,7 @@ import { Form, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import FormContainer from '../components/FormContainer'
 import { saveShippingAddress } from '../actions/cartActions'
+import CheckoutSteps from '../components/CheckoutSteps'
 
 
 const ShippingScreen = () => {
@@ -17,7 +18,7 @@ const ShippingScreen = () => {
     // the inputs is controlled by an onChange handler but lack a value property equal to one of the piece of state
     // the initial shippingAddress will be null, so set a default state value of ""
     const [address, setAddress] = useState(shippingAddress.address || "")
-    const [suburb, setSuburb] = useState(shippingAddress.Suburb || "")
+    const [suburb, setSuburb] = useState(shippingAddress.suburb || "")
     const [postCode, setPostCode] = useState(shippingAddress.postCode || "")
     const [country, setCountry] = useState(shippingAddress.country || "")
 
@@ -31,6 +32,11 @@ const ShippingScreen = () => {
 
     return (
         <FormContainer>
+
+            {/* props-default-to-true */}
+            {/* it will be same as <CheckoutSteps step1={true} step2={true} /> */}
+            <CheckoutSteps step1 step2/>
+
             <h1>Shipping</h1>
             <Form onSubmit={submitHandler}>
                 <Form.Group controlId='address'>
