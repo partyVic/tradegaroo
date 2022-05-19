@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_SAVE_SHIPPING_ADDRESS } from "../constants/cartConstants";
+import { CART_ADD_ITEM, CART_REMOVE_ITEM, CART_SAVE_SHIPPING_ADDRESS, CART_SAVE_PAYMENT_METHOD } from "../constants/cartConstants";
 
 // getState from Redux. Returns the current state tree of your application. It is equal to the last value returned by the store's reducer.
 export const addToCart = (id, qty) => async (dispatch, getState) => {
@@ -33,9 +33,19 @@ export const removeFromCart = (id) => (dispatch, getState) => {
 
 export const saveShippingAddress = (data) => (dispatch) => {
     dispatch({
-      type: CART_SAVE_SHIPPING_ADDRESS,
-      payload: data,
+        type: CART_SAVE_SHIPPING_ADDRESS,
+        payload: data,
     })
-  
+
     localStorage.setItem('shippingAddress', JSON.stringify(data))
-  }
+}
+
+
+export const savePaymentMethod = (data) => (dispatch) => {
+    dispatch({
+        type: CART_SAVE_PAYMENT_METHOD,
+        payload: data,
+    })
+
+    localStorage.setItem('paymentMethod', JSON.stringify(data))
+}
