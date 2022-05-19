@@ -42,7 +42,13 @@ const CartScreen = () => {
     }
 
     const checkoutHandler =()=>{
-        navigate('/login?redirect=shipping')
+
+        // *** react router dom v6 the link in the button in the cart screen URL needs to be changed from:
+        // *** navigate("login?redirect=shipping") to navigate("/login?redirect=/shipping")
+        // *** without / , will go to http://localhost:3000/login/shipping
+        // *** with / , will go to http://localhost:3000/shipping
+        // *** this will prevent the URL from being appended and will save you a huge confusing headache
+        navigate('/login?redirect=/shipping')
     }
 
     return (
