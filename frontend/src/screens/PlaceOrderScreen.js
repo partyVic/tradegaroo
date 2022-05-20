@@ -5,6 +5,7 @@ import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
+import { createOrder } from '../actions/orderActions'
 
 const PlaceOrderScreen = () => {
     const navigate = useNavigate()
@@ -25,13 +26,35 @@ const PlaceOrderScreen = () => {
     const itemsPrice = cart.cartItems.reduce(
         (acc, item) => acc + item.price * item.qty, 0
     )
-    const shippingPrice = itemsPrice > 30 ? 0 : 15  // if item price is higher than $30, shipping price will be 0, else $15
-    const taxPrice = 0.1 * itemsPrice
-    const totalPrice = itemsPrice + shippingPrice + taxPrice
+    const shippingPrice = Number((itemsPrice > 30 ? 0 : 15).toFixed(2))  // if item price is higher than $30, shipping price will be 0, else $15
+    const taxPrice = Number((0.1 * itemsPrice).toFixed(2))
+    const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2))
+   
+
+
+    const orderCreate = useSelector((state) => state.orderCreate)
+    const { order, success, error } = orderCreate
+
+    useEffect(() => {
+        if (success) {
+            navigate(`/order/${order._id}`)
+        }
+    }, [navigate, success, order])
 
 
     const placeOrderHandler = () => {
-        console.log('order')
+        dispatch(createOrder({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress,
+            paymentMethod: cart.paymentMethod,
+            // itemsPrice: cart.itemsPrice,
+            // shippingPrice: cart.shippingPrice,
+            // taxPrice: cart.taxPrice,
+            // totalPrice: cart.totalPrice,
+            shippingPrice: shippingPrice,
+            taxPrice: taxPrice,
+            totalPrice: totalPrice,
+        }))
     }
 
     return (
@@ -119,6 +142,10 @@ const PlaceOrderScreen = () => {
                                     <Col>Total</Col>
                                     <Col>${totalPrice.toFixed(2)}</Col>
                                 </Row>
+                            </ListGroup.Item>
+
+                            <ListGroup.Item>
+                                {error && <Message variant='danger'>{error}</Message>}
                             </ListGroup.Item>
 
                             <ListGroup.Item>
