@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
 import { createOrder } from '../actions/orderActions'
+import { ORDER_CREATE_RESET } from '../constants/orderConstants'
+import { USER_DETAILS_RESET } from '../constants/userConstants'
 
 const PlaceOrderScreen = () => {
     const navigate = useNavigate()
@@ -29,7 +31,7 @@ const PlaceOrderScreen = () => {
     const shippingPrice = Number((itemsPrice > 30 ? 0 : 15).toFixed(2))  // if item price is higher than $30, shipping price will be 0, else $15
     const taxPrice = Number((0.1 * itemsPrice).toFixed(2))
     const totalPrice = Number((itemsPrice + shippingPrice + taxPrice).toFixed(2))
-   
+
 
 
     const orderCreate = useSelector((state) => state.orderCreate)
@@ -38,6 +40,8 @@ const PlaceOrderScreen = () => {
     useEffect(() => {
         if (success) {
             navigate(`/order/${order._id}`)
+            dispatch({ type: USER_DETAILS_RESET })
+            dispatch({ type: ORDER_CREATE_RESET })
         }
     }, [navigate, success, order])
 
@@ -54,6 +58,7 @@ const PlaceOrderScreen = () => {
             shippingPrice: shippingPrice,
             taxPrice: taxPrice,
             totalPrice: totalPrice,
+            itemsPrice: itemsPrice
         }))
     }
 
