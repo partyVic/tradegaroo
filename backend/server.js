@@ -30,6 +30,12 @@ app.use('/api/users', userRoutes)
 app.use('/api/orders', orderRoutes)
 
 
+// Paypal config route
+// when ready to make the payment, will hit this route and fetch this client ID in order to implement Paypal
+app.get('/api/config/paypal', (req, res) =>
+    res.send(process.env.PAYPAL_CLIENT_ID)
+)
+
 // middlewares to handle errors, put below all routes
 app.use(notFound)
 app.use(errorHandler)
