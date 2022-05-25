@@ -5,7 +5,7 @@ import { Table, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listUsers } from '../actions/userActions'
+import { listUsers, deleteUser } from '../actions/userActions'
 
 const UserListScreen = () => {
     const navigate = useNavigate()
@@ -17,6 +17,9 @@ const UserListScreen = () => {
     const userLogin = useSelector((state) => state.userLogin)
     const { userInfo } = userLogin
 
+    const userDelete = useSelector((state) => state.userDelete)
+    const { success: successDelete } = userDelete   // destructuring: rename success to successDelete
+
 
 
     useEffect(() => {
@@ -25,13 +28,19 @@ const UserListScreen = () => {
         } else {
             navigate('/login')
         }
-    }, [dispatch, navigate, userInfo])
+    },
+        // why successDelete is not used in the useEffect but still placed in the array?
+        // It does not need to be used in useEffect.
+        // When you delete a user successDelete value changes from false to true. It leads to calling useEffect function to update user list and remove the deleted user from UI.
+        [dispatch, navigate, successDelete, userInfo])
 
 
 
     const deleteHandler = (id) => {
-        console.log('delete user')
-      }
+        if (window.confirm('Are you sure')) {
+            dispatch(deleteUser(id))
+        }
+    }
 
     return (
         <>
@@ -75,6 +84,7 @@ const UserListScreen = () => {
                                     <Button
                                         variant='danger'
                                         className='btn-sm'
+                                        disabled={userInfo._id === user._id}      // Admin can delete himself/herself
                                         onClick={() => deleteHandler(user._id)}
                                     >
                                         <i className='fas fa-trash'></i>
