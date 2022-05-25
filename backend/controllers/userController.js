@@ -105,7 +105,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         const userEmailExists = await User.findOne({ email: req.body.email });
         if (userEmailExists) {
             res.status(400); //bad request
-            throw new Error("Email already in Use");
+            throw new Error("Email already in use");
         } else {
             user.email = req.body.email || user.email
         }
@@ -160,7 +160,62 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 
 
-export { authUser, registerUser, getUserProfile, updateUserProfile, getUsers, deleteUser }
+// @desc    Get user by ID
+// @route   GET /api/users/:id
+// @access  Private/Admin
+const getUserById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select('-password')  // get the user data with out sending back the password field
+
+    if (user) {
+        res.json(user)
+    } else {
+        res.status(404)
+        throw new Error('User not found')
+    }
+})
+
+
+
+// @desc    Update user
+// @route   PUT /api/users/:id
+// @access  Private/Admin
+const updateUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+
+    if (user) {
+        user.name = req.body.name || user.name
+
+        //check if email is sent from req.body and prevent duplicate email
+        const userEmailExists = await User.findOne({ email: req.body.email });
+        if (userEmailExists) {
+            res.status(400); //bad request
+            throw new Error("Email already in use");
+        } else {
+            user.email = req.body.email || user.email
+        }
+
+        // If we don't pass a value for isAdmin in our body, req.body.isAdmin won't be defined.
+        // Since it's not defined, and user.isAdmin wasn't given a fallback value (like user.name and user.email)
+        // an error will get thrown that req.body.isAdmin is a required value we have to send each time we call the userUpdate function.
+        user.isAdmin = (req.body.isAdmin === undefined) ? user.isAdmin : req.body.isAdmin
+
+        const updatedUser = await user.save()
+
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
+        })
+    } else {
+        res.status(404)
+        throw new Error('User not found')
+    }
+})
+
+
+
+export { authUser, registerUser, getUserProfile, updateUserProfile, getUsers, deleteUser, getUserById, updateUser }
 
 
 // req.body userfull tips:
