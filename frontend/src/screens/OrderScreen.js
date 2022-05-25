@@ -70,7 +70,7 @@ const OrderScreen = () => {
             }
         }
     },
-        [dispatch, order, orderId, navigate, successPay])
+        [dispatch, order, orderId, navigate, successPay, userInfo])
 
 
 

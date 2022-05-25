@@ -6,6 +6,7 @@ import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { listProductDetails } from '../actions/productActions'
+import { addToCart } from '../actions/cartActions'
 
 const ProductScreen = () => {
     const params = useParams()
@@ -17,13 +18,22 @@ const ProductScreen = () => {
     const productDetails = useSelector(state => state.productDetails)
     const { loading, error, product } = productDetails
 
+
     useEffect(() => {
         dispatch(listProductDetails(params.id))
-    }, [dispatch])
+    }, [dispatch, params.id])
 
+
+
+    // const addToCartHandler = () => {
+    //     navigate(`/cart/${params.id}?qty=${qty}`)
+    // }
+    // *** below is a better solution *** 
     const addToCartHandler = () => {
-        navigate(`/cart/${params.id}?qty=${qty}`)
+        dispatch(addToCart(product._id, qty))
+        navigate('/cart')
     }
+
 
     return (
         <>
@@ -89,7 +99,7 @@ const ProductScreen = () => {
                                                         style={{ padding: "0.75rem 0.2rem" }}
                                                         as='select'
                                                         value={qty}
-                                                        onChange={e => setQty(e.target.value)}
+                                                        onChange={e => setQty(Number(e.target.value))}
                                                     >
                                                         {[...Array(product.countInStock).keys()].map(x => (
                                                             <option key={x + 1} value={x + 1}>{x + 1}</option>

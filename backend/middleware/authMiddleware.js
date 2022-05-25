@@ -40,4 +40,26 @@ const protect = asyncHandler(async (req, res, next) => {
 
 })
 
-export { protect }
+
+
+// Check is current log in user is Admin
+const admin = (req, res, next) => {
+
+    // Lecture 67 Question:
+    // Why req.user in protect middleware instead of req.body.user ?
+    // Confused on why we use req.user instead of storing it in the locals field. How do we pass variables to the next middleware?
+
+    // Answer:
+    // After we verify the token we set: req.user = await User.findById(decoded.id).select('-password')
+    // We have the request object available throughout the middleware chain. 
+    // Assigning the user as a property to it makes it available to the next middlewares in the app flow. 
+    // This is why we do not need to set it to res.locals.
+    if (req.user && req.user.isAdmin) {  //once the user is log in, it will has the req.user
+        next()
+    } else {
+        res.status(401)
+        throw new Error('Not authorized as an admin')
+    }
+}
+
+export { protect, admin }

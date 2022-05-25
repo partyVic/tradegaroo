@@ -2,7 +2,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { productListReducer, productDetailsReducer } from './reducers/productReducers'
 import { cartReducer } from './reducers/cartReducers'
-import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer } from './reducers/userReducers'
+import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer, userListReducer } from './reducers/userReducers'
 import { orderCreateReducer, orderDetailsReducer, orderPayReducer, orderListMyReducer } from './reducers/orderReducers'
 
 const reducer = {
@@ -13,6 +13,7 @@ const reducer = {
     userRegister: userRegisterReducer,
     userDetails: userDetailsReducer,
     userUpdateProfile: userUpdateProfileReducer,
+    userList: userListReducer,
     orderCreate: orderCreateReducer,
     orderDetails: orderDetailsReducer,
     orderPay: orderPayReducer,
@@ -35,7 +36,10 @@ const shippingAddressFromStorage = localStorage.getItem('shippingAddress')
 
 
 const preloadedState = {
-    cart: { cartItems: cartItemsFromStorage, shippingAddress: shippingAddressFromStorage },
+    cart: {
+        cartItems: cartItemsFromStorage,
+        shippingAddress: shippingAddressFromStorage
+    },
     userLogin: { userInfo: userInfoFromStorage }
 }
 
