@@ -84,7 +84,7 @@ const UserListScreen = () => {
                                     <Button
                                         variant='danger'
                                         className='btn-sm'
-                                        disabled={userInfo._id === user._id}      // Admin can delete himself/herself
+                                        disabled={userInfo._id === user._id}      // Admin can not delete himself/herself
                                         onClick={() => deleteHandler(user._id)}
                                     >
                                         <i className='fas fa-trash'></i>

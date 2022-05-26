@@ -48,6 +48,9 @@ const ProfileScreen = () => {
                 dispatch({ type: USER_UPDATE_PROFILE_RESET })
                 dispatch(getUserDetails('profile')) // the route will need an id but for now we will use this route userRoutes.route('/profile') instead of using userRoutes.route(id)
                 dispatch(listMyOrders())
+            } else {
+                setName(user.name)
+                setEmail(user.email)
             }
         }
     }, [dispatch, navigate, userInfo, user, success])
@@ -57,10 +60,13 @@ const ProfileScreen = () => {
         e.preventDefault()
 
         //check confirm password is match before dispatch action
-        if (password === confirmPassword) {
+        if (password === confirmPassword && user.email !== email) {
             //dispatch update profile
             dispatch(updateUserProfile({ id: user._id, name, email, password }))
-        } else {
+        } else if (password === confirmPassword && user.email === email) {
+            dispatch(updateUserProfile({ id: user._id, name, password }))
+        }
+        else {
             setMessage('Passwords do no match')
         }
     }
@@ -83,6 +89,7 @@ const ProfileScreen = () => {
                         <Form.Control
                             type='name'
                             placeholder='Enter new name'
+                            value={name}
                             onChange={e => setName(e.target.value)}
                         ></Form.Control>
                     </Form.Group>
@@ -92,6 +99,7 @@ const ProfileScreen = () => {
                         <Form.Control
                             type='email'
                             placeholder='Enter new email address'
+                            value={email}
                             onChange={e => setEmail(e.target.value)}>
                         </Form.Control>
                     </Form.Group>
