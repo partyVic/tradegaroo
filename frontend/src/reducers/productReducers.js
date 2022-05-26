@@ -8,6 +8,7 @@ import {
     PRODUCT_DELETE_REQUEST,
     PRODUCT_DELETE_SUCCESS,
     PRODUCT_DELETE_FAIL,
+    PRODUCT_DELETE_RESET,
     PRODUCT_CREATE_RESET,
     PRODUCT_CREATE_FAIL,
     PRODUCT_CREATE_SUCCESS,
@@ -26,7 +27,7 @@ import {
 } from '../constants/productConstants'
 
 
-const productListReducer = (state = { products: [] }, action) => {
+export const productListReducer = (state = { products: [] }, action) => {
     switch (action.type) {
         case PRODUCT_LIST_REQUEST:
             return { loading: true, products: [] }
@@ -39,7 +40,7 @@ const productListReducer = (state = { products: [] }, action) => {
     }
 }
 
-const productDetailsReducer = (state = { product: { reviews: [] } }, action) => {
+export const productDetailsReducer = (state = { product: { reviews: [] } }, action) => {
     switch (action.type) {
         case PRODUCT_DETAILS_REQUEST:
             // return { ...state, loading: true }  // put ...state before loading:true, upon a second/third/whatever visit, the state contains its own loading property which is set to false, which overrides it if you set loading: true before it.
@@ -53,4 +54,18 @@ const productDetailsReducer = (state = { product: { reviews: [] } }, action) => 
     }
 }
 
-export { productListReducer, productDetailsReducer }
+
+export const productDeleteReducer = (state = {}, action) => {
+    switch (action.type) {
+        case PRODUCT_DELETE_REQUEST:
+            return { loading: true }
+        case PRODUCT_DELETE_SUCCESS:
+            return { loading: false, success: true }
+        case PRODUCT_DELETE_FAIL:
+            return { loading: false, error: action.payload }
+        case PRODUCT_DELETE_RESET:
+            return {}
+        default:
+            return state
+    }
+}

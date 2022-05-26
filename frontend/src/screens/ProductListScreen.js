@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listProducts } from '../actions/productActions'
+import { listProducts, deleteProduct } from '../actions/productActions'
+import { PRODUCT_DELETE_RESET } from '../constants/productConstants'
 
 
 const ProductListScreen = () => {
@@ -16,24 +17,29 @@ const ProductListScreen = () => {
     const productList = useSelector((state) => state.productList)
     const { loading, error, products } = productList
 
+    const productDelete = useSelector((state) => state.productDelete)
+    const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete
+
     const userLogin = useSelector((state) => state.userLogin)
     const { userInfo } = userLogin
 
 
 
     useEffect(() => {
+        dispatch({ type: PRODUCT_DELETE_RESET })
+
         if (!userInfo || !userInfo.isAdmin) {
             navigate('/login')
         } else {
             dispatch(listProducts())
         }
-    }, [dispatch, userInfo, navigate])
+    }, [dispatch, userInfo, navigate, successDelete])  //successDelete doesn't need to be inside of useEffect function. Once successDelete changed, useEffect will trigger.
 
 
 
     const deleteHandler = (id) => {
         if (window.confirm('Are you sure')) {
-            //delete
+            dispatch(deleteProduct(id))
         }
     }
 
@@ -55,10 +61,10 @@ const ProductListScreen = () => {
                 </Col>
             </Row>
 
-            {/* {loadingDelete && <Loader />}
+            {loadingDelete && <Loader />}
             {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
-            {loadingCreate && <Loader />}
-            {errorCreate && <Message variant='danger'>{errorCreate}</Message>} */}
+            {/* {loadingCreate && <Loader />} */}
+            {/* {errorCreate && <Message variant='danger'>{errorCreate}</Message>} */}
 
             {loading ? (
                 <Loader />
