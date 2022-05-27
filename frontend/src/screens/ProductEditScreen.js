@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
-import { listProductDetails } from '../actions/productActions'
-// import { PRODUCT_UPDATE_RESET } from '../constants/productConstants'
+import { listProductDetails, updateProduct } from '../actions/productActions'
+import { PRODUCT_UPDATE_RESET } from '../constants/productConstants'
 
 const ProductEditScreen = () => {
     const params = useParams()
@@ -30,14 +30,16 @@ const ProductEditScreen = () => {
     const productDetails = useSelector((state) => state.productDetails)
     const { loading, error, product } = productDetails
 
-    // const productUpdate = useSelector((state) => state.productUpdate)
-    // const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = productUpdate
+    const productUpdate = useSelector((state) => state.productUpdate)
+    const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = productUpdate
+
 
     useEffect(() => {
-        // if (successUpdate) {
-        //     dispatch({ type: PRODUCT_UPDATE_RESET })
-        //     navigate('/admin/productlist')
-        // } else {
+        if (successUpdate) {
+            dispatch({ type: PRODUCT_UPDATE_RESET })
+            navigate('/admin/productlist')
+        } else {
+
             if (!product.name || product._id !== productId) {
                 dispatch(listProductDetails(productId))
             } else {
@@ -49,8 +51,8 @@ const ProductEditScreen = () => {
                 setCountInStock(product.countInStock)
                 setDescription(product.description)
             }
-        
-    }, [dispatch, navigate, productId, product])
+        }
+    }, [dispatch, navigate, productId, product, successUpdate])
 
     // const uploadFileHandler = async (e) => {
     //     const file = e.target.files[0]
@@ -77,18 +79,16 @@ const ProductEditScreen = () => {
 
     const submitHandler = (e) => {
         e.preventDefault()
-        // dispatch(
-        //     updateProduct({
-        //         _id: productId,
-        //         name,
-        //         price,
-        //         image,
-        //         brand,
-        //         category,
-        //         description,
-        //         countInStock,
-        //     })
-        // )
+        dispatch(updateProduct({
+            _id: productId,
+            name,
+            price,
+            image,
+            brand,
+            category,
+            description,
+            countInStock,
+        }))
     }
 
     return (
@@ -99,8 +99,8 @@ const ProductEditScreen = () => {
             <FormContainer>
                 <h1>Edit Product</h1>
 
-                {/* {loadingUpdate && <Loader />}
-                {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>} */}
+                {loadingUpdate && <Loader />}
+                {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
 
                 {loading ? (
                     <Loader />
