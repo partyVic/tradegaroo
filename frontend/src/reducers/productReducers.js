@@ -43,8 +43,8 @@ export const productListReducer = (state = { products: [] }, action) => {
 export const productDetailsReducer = (state = { product: { reviews: [] } }, action) => {
     switch (action.type) {
         case PRODUCT_DETAILS_REQUEST:
-            // return { ...state, loading: true }  // put ...state before loading:true, upon a second/third/whatever visit, the state contains its own loading property which is set to false, which overrides it if you set loading: true before it.
-            return { loading: true, product: { reviews: [] } } //better solution than upper. Because the state doesn't clear with ...state it copies the current state with whatever product that was there before, what is not what we want in this reducer
+            return { ...state, loading: true }  // put ...state before loading:true, upon a second/third/whatever visit, the state contains its own loading property which is set to false, which overrides it if you set loading: true before it.
+        // return { loading: true, product: { reviews: [] } } // another solution, BUT may cause infinie loop.
         case PRODUCT_DETAILS_SUCCESS:
             return { loading: false, product: action.payload }
         case PRODUCT_DETAILS_FAIL:
