@@ -8,7 +8,11 @@ import Product from '../models/productModel.js'
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-    const products = await Product.find({})
+
+    // sort() takes an object as parameter where the values are 1 or -1
+    // Use -1 for descending order and 1 for ascending
+    // eg: sort({firstName: 1, lastName:-1 ,email:1,createdAt:1, updatedAt:1 })
+    const products = await Product.find({}).sort({ createdAt: -1 })  // *** sort is a mongoose method
     res.json(products)
 })
 
@@ -88,7 +92,7 @@ const updateProduct = asyncHandler(async (req, res) => {
 
     const product = await Product.findById(req.params.id)
 
-    
+
     // If the user just wants to update ONLY the name and description, 
     // then he should be able to do so without providing the values for the rest of the properties.
     // ***** We can do a simple check for that using the ?? operator. *****

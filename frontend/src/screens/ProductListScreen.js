@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listProducts, deleteProduct } from '../actions/productActions'
-import { PRODUCT_DELETE_RESET } from '../constants/productConstants'
+import { listProducts, deleteProduct, createProduct } from '../actions/productActions'
+import { PRODUCT_DELETE_RESET, PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
 
 const ProductListScreen = () => {
@@ -20,20 +20,28 @@ const ProductListScreen = () => {
     const productDelete = useSelector((state) => state.productDelete)
     const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete
 
+    const productCreate = useSelector((state) => state.productCreate)
+    const { loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct } = productCreate
+
     const userLogin = useSelector((state) => state.userLogin)
     const { userInfo } = userLogin
 
 
 
     useEffect(() => {
-        dispatch({ type: PRODUCT_DELETE_RESET })
+        dispatch({ type: PRODUCT_DELETE_RESET }) // add this to solve when delete more than 1 product, it appears multi loders
+        dispatch({ type: PRODUCT_CREATE_RESET })
 
         if (!userInfo || !userInfo.isAdmin) {
             navigate('/login')
+        }
+
+        if (successCreate) {
+            navigate(`/admin/product/${createdProduct._id}/edit`)
         } else {
             dispatch(listProducts())
         }
-    }, [dispatch, userInfo, navigate, successDelete])  //successDelete doesn't need to be inside of useEffect function. Once successDelete changed, useEffect will trigger.
+    }, [dispatch, userInfo, navigate, successDelete, successCreate, createdProduct])  //successDelete doesn't need to be inside of useEffect function. Once successDelete changed, useEffect will trigger.
 
 
 
@@ -44,7 +52,7 @@ const ProductListScreen = () => {
     }
 
     const createProductHandler = () => {
-        //create
+        dispatch(createProduct())
     }
 
 
@@ -63,8 +71,8 @@ const ProductListScreen = () => {
 
             {loadingDelete && <Loader />}
             {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
-            {/* {loadingCreate && <Loader />} */}
-            {/* {errorCreate && <Message variant='danger'>{errorCreate}</Message>} */}
+            {loadingCreate && <Loader />}
+            {errorCreate && <Message variant='danger'>{errorCreate}</Message>}
 
             {loading ? (
                 <Loader />

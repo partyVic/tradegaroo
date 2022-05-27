@@ -107,3 +107,45 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
         })
     }
 }
+
+
+// In the front-end NO need to put any data in the createProduct
+// Because in the back-end productController already fill the default data when create a product 
+export const createProduct = () => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: PRODUCT_CREATE_REQUEST,
+        })
+
+        const {
+            userLogin: { userInfo },
+        } = getState()
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        }
+
+        // *** just use {} as the second parameter for post request. 
+        // Beacuse: 1. back-end already fill the default value. 2. Axios post request needs to put some value for second parameter.
+        const { data } = await axios.post(`/api/products`, {}, config)
+
+        dispatch({
+            type: PRODUCT_CREATE_SUCCESS,
+            payload: data,
+        })
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message
+        if (message === 'Not authorized, token failed') {
+            dispatch(logout())
+        }
+        dispatch({
+            type: PRODUCT_CREATE_FAIL,
+            payload: message,
+        })
+    }
+}
