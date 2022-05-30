@@ -1,3 +1,4 @@
+import { protect, admin } from '../middleware/authMiddleware.js'
 import path from 'path';    // path module from node.js
 import express from 'express';
 import multer from 'multer';    // Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files
@@ -73,6 +74,8 @@ const upload = multer({ storage })
 
 router.post(
     '/',
+    protect,
+    admin,
     upload.single('image'),
     (req, res) => {
         // if use upload.array, below use req.files(plural)

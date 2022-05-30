@@ -24,7 +24,7 @@ const ProductEditScreen = () => {
     const [category, setCategory] = useState('')
     const [countInStock, setCountInStock] = useState(0)
     const [description, setDescription] = useState('')
-    // const [uploading, setUploading] = useState(false)
+    const [uploading, setUploading] = useState(false)   // set upload image status
 
 
     const productDetails = useSelector((state) => state.productDetails)
@@ -32,6 +32,10 @@ const ProductEditScreen = () => {
 
     const productUpdate = useSelector((state) => state.productUpdate)
     const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = productUpdate
+
+    // add this if upload images needs protect & isAdmin
+    const userLogin = useSelector(state => state.userLogin);
+    const { userInfo } = userLogin;
 
 
     useEffect(() => {
@@ -54,28 +58,31 @@ const ProductEditScreen = () => {
         }
     }, [dispatch, navigate, productId, product, successUpdate])
 
-    // const uploadFileHandler = async (e) => {
-    //     const file = e.target.files[0]
-    //     const formData = new FormData()
-    //     formData.append('image', file)
-    //     setUploading(true)
 
-    //     try {
-    //         const config = {
-    //             headers: {
-    //                 'Content-Type': 'multipart/form-data',
-    //             },
-    //         }
 
-    //         const { data } = await axios.post('/api/upload', formData, config)
+    const uploadFileHandler = async (e) => {
+        const file = e.target.files[0]          // e.target.files is array. upload single image use [0]
+        const formData = new FormData()         // creates an empty FormData object {}
+        formData.append('image', file)          // add a key/value pair to this using FormData.append
+        setUploading(true)
 
-    //         setImage(data)
-    //         setUploading(false)
-    //     } catch (error) {
-    //         console.error(error)
-    //         setUploading(false)
-    //     }
-    // }
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',         // **** upload image using this content-type
+                    Authorization: `Bearer ${userInfo.token}`,     // **** add this if upload images needs protect & isAdmin
+                },
+            }
+
+            const { data } = await axios.post('/api/upload', formData, config)  // send formData using axios
+
+            setImage(data)
+            setUploading(false)
+        } catch (error) {
+            console.error(error)
+            setUploading(false)
+        }
+    }
 
     const submitHandler = (e) => {
         e.preventDefault()
@@ -128,7 +135,7 @@ const ProductEditScreen = () => {
                             ></Form.Control>
                         </Form.Group>
 
-                        <Form.Group controlId='image'>
+                        <Form.Group controlId='formFileMultiple'>
                             <Form.Label>Image</Form.Label>
                             <Form.Control
                                 type='text'
@@ -137,13 +144,17 @@ const ProductEditScreen = () => {
                                 onChange={(e) => setImage(e.target.value)}
                             ></Form.Control>
 
-                            {/* <Form.File
-                                id='image-file'
+                            <Form.Control
+                                // className='w-100'
+                                type='file'
+                                // accept="image/jpg, image/jpeg, image/png"
                                 label='Choose File'
-                                custom
+                                muitiple='true'
                                 onChange={uploadFileHandler}
-                            ></Form.File>
-                            {uploading && <Loader />} */}
+                            ></Form.Control>
+
+                            {uploading && <Loader />}
+
                         </Form.Group>
 
                         <Form.Group controlId='brand'>
