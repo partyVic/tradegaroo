@@ -19,7 +19,10 @@ const app = express()
 app.use(express.json()) // allow us to accept JSON data in the req.body
 
 // used for show the log of requests. Put before any route handlers
-// app.use(morgan('dev'))
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'))
+}
+
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
