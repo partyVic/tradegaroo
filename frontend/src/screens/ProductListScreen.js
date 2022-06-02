@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Paginate from '../components/Paginate'
 import { listProducts, deleteProduct, createProduct } from '../actions/productActions'
 import { PRODUCT_DELETE_RESET, PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
@@ -15,7 +16,7 @@ const ProductListScreen = () => {
     const dispatch = useDispatch()
 
     const productList = useSelector((state) => state.productList)
-    const { loading, error, products } = productList
+    const { loading, error, products, page, pages } = productList
 
     const productDelete = useSelector((state) => state.productDelete)
     const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete
@@ -26,6 +27,8 @@ const ProductListScreen = () => {
     const userLogin = useSelector((state) => state.userLogin)
     const { userInfo } = userLogin
 
+
+    const pageNumber = params.pageNumber || 1
 
 
     useEffect(() => {
@@ -39,9 +42,9 @@ const ProductListScreen = () => {
         if (successCreate) {
             navigate(`/admin/product/${createdProduct._id}/edit`)
         } else {
-            dispatch(listProducts())
+            dispatch(listProducts('', pageNumber))   // the first argument is used for search keyword. In ProductListScreen doesn't need keywordm, so put into ""
         }
-    }, [dispatch, userInfo, navigate, successDelete, successCreate, createdProduct])  //successDelete doesn't need to be inside of useEffect function. Once successDelete changed, useEffect will trigger.
+    }, [dispatch, userInfo, navigate, successDelete, successCreate, createdProduct, pageNumber])  //successDelete doesn't need to be inside of useEffect function. Once successDelete changed, useEffect will trigger.
 
 
 
@@ -117,6 +120,9 @@ const ProductListScreen = () => {
                             ))}
                         </tbody>
                     </Table>
+
+                    <Paginate pages={pages} page={page} isAdmin={true} />
+
                 </>
             )}
         </>

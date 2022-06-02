@@ -5,6 +5,7 @@ import { Row, Col } from 'react-bootstrap'
 import Product from '../components/Product.js'
 import Loader from '../components/Loader.js'
 import Message from '../components/Message.js'
+import Paginate from '../components/Paginate'
 import { listProducts } from '../actions/productActions.js'
 
 const HomeScreen = () => {
@@ -16,13 +17,16 @@ const HomeScreen = () => {
     // useSelector is used to select parts of the state
     // productList is same as defined in the store reducer
     const productList = useSelector(state => state.productList)
-    const { loading, error, products } = productList
+    const { loading, error, products, page, pages } = productList
+
 
     const { keyword } = params
+    const pageNumber = params.pageNumber || 1
+
 
     useEffect(() => {
-        dispatch(listProducts(keyword))
-    }, [dispatch, keyword])
+        dispatch(listProducts(keyword, pageNumber))
+    }, [dispatch, keyword, pageNumber])
 
     return (
         <>
@@ -31,13 +35,25 @@ const HomeScreen = () => {
                 ? <Loader />
                 : error
                     ? <Message variant='danger'>{error}</Message>
-                    : <Row>
-                        {products.map(product => (
-                            <Col sm={12} md={6} lg={4} xl={3} key={product._id} className='align-items-stretch d-flex'>
-                                <Product product={product} />
-                            </Col>
-                        ))}
-                    </Row>}
+                    : (
+                        <>
+                            {products.length === 0 && <div><h2><strong>Product not found</strong></h2></div>}
+
+                            <Row>
+                                {products.map(product => (
+                                    <Col sm={12} md={6} lg={4} xl={3} key={product._id} className='align-items-stretch d-flex'>
+                                        <Product product={product} />
+                                    </Col>
+                                ))}
+                            </Row>
+
+                            <Paginate
+                                pages={pages}
+                                page={page}
+                                keyword={keyword ? keyword : ''}
+                            />
+                        </>
+                    )}
         </>
     )
 }

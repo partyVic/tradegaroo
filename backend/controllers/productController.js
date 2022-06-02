@@ -9,6 +9,9 @@ import Product from '../models/productModel.js'
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
 
+    const pageSize = 10     // For Pagination, setting to show how many items per page
+    const page = Number(req.query.pageNumber) || 1      // Used for the query string(?pageNumber=1or2...), what the certain page shows the items. Always need to check || 1, at least 1 page
+
     // Why hit backend for the product search?
     // Answer: In real world scenario you will never fetch all products. You will use pagination and fetch page by page. 
     // This means that in your redux store you have only a small portion of all of your products and search wont be accurate. Thats why we need to hit endpoint and search trough all database.
@@ -84,11 +87,31 @@ const getProducts = asyncHandler(async (req, res) => {
     // })
 
 
-    // sort() takes an object as parameter where the values are 1 or -1
-    // Use -1 for descending order and 1 for ascending
-    // eg: sort({firstName: 1, lastName:-1 ,email:1,createdAt:1, updatedAt:1 })
-    const products = await Product.find({ ...keyword }).sort({ createdAt: -1 })  // *** sort is a mongoose method
-    res.json(products)
+    // ***** mongoose Model.countDocuments(). Counts number of documents matching filter in a database collection. 
+    const count = await Product.countDocuments({ ...keyword })  // If not in search, will be ({}). Count all the documents.
+
+
+    // ***** mongoose advanced methods.
+    const products = await Product.find({ ...keyword })
+
+        // limit() : will return how many docements limited by page size (if pageSize = 2, return 2 products).
+        .limit(pageSize)
+
+        // skip(): is telling it how many products to skip. 
+        // skip makes sure we get the right products (for example, if we are on page 2 we get the next 2 products).
+        // Examples: 
+        // Page 1:  2*(1-1) = 0, so skip 0 products. 
+        // Page 2:  2*(2-1) = 2, so skip 2 products.
+        .skip(pageSize * (page - 1))
+
+        //sort(): takes an object as parameter where the values are 1 or -1
+        // Use -1 for descending order and 1 for ascending
+        // eg: sort({firstName: 1, lastName:-1 ,email:1,createdAt:1, updatedAt:1 })
+        .sort({ createdAt: -1 })
+
+
+    // ***** if we have 4 products, count = 4, pageSize = 2. So pages would be 4 / 2 = 2 pages
+    res.json({ products, page, pages: Math.ceil(count / pageSize) })
 })
 
 
