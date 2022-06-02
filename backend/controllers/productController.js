@@ -9,10 +9,85 @@ import Product from '../models/productModel.js'
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
 
+    // Why hit backend for the product search?
+    // Answer: In real world scenario you will never fetch all products. You will use pagination and fetch page by page. 
+    // This means that in your redux store you have only a small portion of all of your products and search wont be accurate. Thats why we need to hit endpoint and search trough all database.
+
+    // keyword search by name:
+    const keyword = req.query.keyword
+        ? {
+            name: {
+                $regex: req.query.keyword,      // $regex is from MongoDB. Provides regular expression capabilities for pattern matching strings in queries.
+                $options: 'i',                  // Case insensitivity to match upper and lower cases. 
+            },
+        }
+        : {}
+
+    // Example 1: Use the logical OR using mongoose to achieve Keyword searches by Name and Brand
+    // const keyword = req.query.keyword
+    //     ? {
+    //         $or: [
+    //             {
+    //                 name: {
+    //                     $regex: req.query.keyword,
+    //                     $options: "i",
+    //                 },
+    //             },
+    //             {
+    //                 brand: {
+    //                     $regex: req.query.keyword,
+    //                     $options: "i",
+    //                 },
+    //             },
+    //         ],
+    //     }
+    //     : {};
+
+
+    //Example2: How to query multiple fields
+    // const keywordName = req.query.keyword ? {
+    //     name: {
+    //         $regex: req.query.keyword,
+    //         $options: 'i'
+    //     }
+    // } : {}
+
+    // const keywordBrand = req.query.keyword ? {
+    //     brand: {
+    //         $regex: req.query.keyword,
+    //         $options: 'i'
+    //     }
+    // } : {}
+
+    // const keywordDescription = req.query.keyword ? {
+    //     description: {
+    //         $regex: req.query.keyword,
+    //         $options: 'i'
+    //     }
+    // } : {}
+
+    // const keywordCategory = req.query.keyword ? {
+    //     category: {
+    //         $regex: req.query.keyword,
+    //         $options: 'i'
+    //     }
+    // } : {}
+
+
+    // const products = await Product.find({
+    //     $or: [
+    //         { ...keywordName },
+    //         { ...keywordBrand },
+    //         { ...keywordDescription },
+    //         { ...keywordCategory }
+    //     ]
+    // })
+
+
     // sort() takes an object as parameter where the values are 1 or -1
     // Use -1 for descending order and 1 for ascending
     // eg: sort({firstName: 1, lastName:-1 ,email:1,createdAt:1, updatedAt:1 })
-    const products = await Product.find({}).sort({ createdAt: -1 })  // *** sort is a mongoose method
+    const products = await Product.find({ ...keyword }).sort({ createdAt: -1 })  // *** sort is a mongoose method
     res.json(products)
 })
 

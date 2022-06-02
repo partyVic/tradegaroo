@@ -42,7 +42,11 @@ function App() {
             <Route path="/admin/orderlist" element={<OrderListScreen />} />
             <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
             <Route path="/admin/product/:id/edit" element={<ProductEditScreen />} />
+
+            {/* For the product search, still shows in the HomeScreen */}
+            <Route path="/search/:keyword" element={<HomeScreen />} />
             <Route path="/" element={<HomeScreen />} />
+            
           </Routes>
         </Container>
       </main>

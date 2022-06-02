@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
 import { Row, Col } from 'react-bootstrap'
 import Product from '../components/Product.js'
 import Loader from '../components/Loader.js'
@@ -8,6 +8,7 @@ import Message from '../components/Message.js'
 import { listProducts } from '../actions/productActions.js'
 
 const HomeScreen = () => {
+    const params = useParams()
 
     // useDispatch is used to dispatch or call in an action
     const dispatch = useDispatch()
@@ -17,9 +18,11 @@ const HomeScreen = () => {
     const productList = useSelector(state => state.productList)
     const { loading, error, products } = productList
 
+    const { keyword } = params
+
     useEffect(() => {
-        dispatch(listProducts())
-    }, [dispatch])
+        dispatch(listProducts(keyword))
+    }, [dispatch, keyword])
 
     return (
         <>
