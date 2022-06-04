@@ -7,6 +7,7 @@ import Loader from '../components/Loader.js'
 import Message from '../components/Message.js'
 import Paginate from '../components/Paginate'
 import ProductCarousel from '../components/ProductCarousel'
+import Meta from '../components/Meta'
 import { listProducts } from '../actions/productActions.js'
 
 const HomeScreen = () => {
@@ -31,12 +32,13 @@ const HomeScreen = () => {
 
     return (
         <>
+            <Meta />
 
             {/* When doing a product, don't show the product carousel */}
             {!keyword ? (
                 <ProductCarousel />
             ) : (
-                <Link to='/' className='btn btn-light'>
+                <Link to='/' className='btn btn-info'>
                     <strong>Go Back</strong>
                 </Link>
             )}

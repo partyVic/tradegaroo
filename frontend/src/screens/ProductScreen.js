@@ -5,6 +5,7 @@ import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
+import Meta from '../components/Meta'
 import { listProductDetails, createProductReview } from '../actions/productActions'
 import { addToCart } from '../actions/cartActions'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
@@ -76,6 +77,10 @@ const ProductScreen = () => {
                     ? <Message variant='danger'>{error}</Message>
                     : (
                         <>
+
+                            {/* Need to put <Meta> here, because need to load the data first and then get the product.name */}
+                            <Meta title={product.name} />
+
                             <Row>
                                 <Col md={6}>
 
