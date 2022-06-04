@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
 import Product from '../components/Product.js'
 import Loader from '../components/Loader.js'
 import Message from '../components/Message.js'
 import Paginate from '../components/Paginate'
+import ProductCarousel from '../components/ProductCarousel'
 import { listProducts } from '../actions/productActions.js'
 
 const HomeScreen = () => {
@@ -30,6 +31,16 @@ const HomeScreen = () => {
 
     return (
         <>
+
+            {/* When doing a product, don't show the product carousel */}
+            {!keyword ? (
+                <ProductCarousel />
+            ) : (
+                <Link to='/' className='btn btn-light'>
+                    <strong>Go Back</strong>
+                </Link>
+            )}
+
             <h1>Latest Products</h1>
             {loading
                 ? <Loader />
