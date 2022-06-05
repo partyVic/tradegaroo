@@ -9,7 +9,7 @@ import Product from '../models/productModel.js'
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
 
-    const pageSize = 10     // For Pagination, setting to show how many items per page
+    const pageSize = 20     // For Pagination, setting to show how many items per page
     const page = Number(req.query.pageNumber) || 1      // Used for the query string(?pageNumber=1or2...), what the certain page shows the items. Always need to check || 1, at least 1 page
 
     // Why hit backend for the product search?

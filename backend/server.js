@@ -1,3 +1,4 @@
+import path from 'path'
 import express from 'express'
 import dotenv from 'dotenv'
 import colors from 'colors'
@@ -35,9 +36,6 @@ cloudinary.config({
 
 // ---------- Below all are routes -------------------
 
-app.get('/', (req, res) => {
-    res.send('API is running')
-})
 
 // any url link to below address will go to productRoutes/userRoutes
 app.use('/api/products', productRoutes)
@@ -51,6 +49,27 @@ app.use('/api/upload', uploadRoutes)
 app.get('/api/config/paypal', (req, res) =>
     res.send(process.env.PAYPAL_CLIENT_ID)
 )
+
+
+
+// make the front end react app as static asset
+// put behind all routes
+const __dirname = path.resolve()
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '/frontend/build')))  //set the frontend/build as static asset folder
+
+    // any routes that do NOT meet the API routes above will go to the front end React routes and hit /frontend/build.index.html
+    app.get('*', (req, res) =>
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))  // ***** use res.sendFile
+    )
+} else {
+    // if in development, the root route will be "/"
+    app.get('/', (req, res) => {
+        res.send('API is running....')
+    })
+}
+
 
 
 // middlewares to handle errors, put below all routes
