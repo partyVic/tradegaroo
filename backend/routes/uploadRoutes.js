@@ -15,7 +15,7 @@ const router = express.Router();
 // storage setting
 // const storage = multer.diskStorage({
 //     destination(req, file, cb) {
-//         cb(null, 'uploads/');    // null means no Error, then upload to folder Meegle
+//         cb(null, 'uploads/');    // null means no Error, then upload to folder Tradegaroo
 //     },
 //     filename(req, file, cb) {
 //         cb(
@@ -64,7 +64,7 @@ const router = express.Router();
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'Meegle',
+        folder: 'Tradegaroo',
         allowed_formats: ['jpeg', 'png', 'jpg']
     },
 });

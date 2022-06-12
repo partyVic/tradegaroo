@@ -29,7 +29,7 @@ const Header = () => {
                     and will NOT change the default Bootstrap styles
                     if use <Link> to wrap Bootstrap components, it may change the default styles
                 */}
-                    <Navbar.Brand as={Link} to="/">Meegle</Navbar.Brand>
+                    <Navbar.Brand as={Link} to="/">Tradegaroo</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
 

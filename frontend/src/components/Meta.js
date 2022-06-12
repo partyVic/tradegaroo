@@ -12,9 +12,9 @@ const Meta = ({ title, description, keywords }) => {
 }
 
 Meta.defaultProps = {
-    title: 'Welcome To Meegle',
+    title: 'Welcome To Tradegaroo',
     description: 'We sell the best products in Australia',
-    keywords: 'electronics, buy electronics, cheap electroincs',
+    keywords: 'electronics, clothing, accessories, sports, health, beauty, toy',
 }
 
 export default Meta
