@@ -34,7 +34,6 @@
 ------------
 ### Frontend Features
 
-------------
 ###### 1. Home Screen
 ![](https://res.cloudinary.com/dsk0gjgdw/image/upload/v1655205270/Tradegaroo/home_awjd5z.png)
 
