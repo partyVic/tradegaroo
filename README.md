@@ -22,11 +22,11 @@ DELETE    /api/products/:id                        Delete a product. Admin only
 User & Auth routes :
 -------------------------------------------------------------------------
 [Method]  [Route]
-GET       /api/usersGet all users.                 Admin only
-GET       /api/users/:id                           Get user by ID. admin only
+GET       /api/users                               Get all users. Admin only
+GET       /api/users/:id                           Get user by ID. Admin only
 GET       /api/users/profile                       Return logged in user
 PUT       /api/users/profile                       Update user profile
-PUT       /api/users/:id                           Update a user by ID. admin only
+PUT       /api/users/:id                           Update a user by ID. Admin only
 POST      /api/users                               Create a new user
 POST      /api/users/login                         Authenticate user and get token
 DELETE    /api/users/:id                           Delete a user. Admin only
