@@ -17,6 +17,7 @@ PUT       /api/products/:id                                       Update a produ
 POST      /api/products                                           Add a new product. Admin only
 POST      /api/products/:id/reviews                               Add a new product review
 DELETE    /api/products/:id                                       Delete a product. Admin only
+
 -------------------------------------------------------------------------
 User & Auth routes :
 -------------------------------------------------------------------------
@@ -29,6 +30,7 @@ PUT       /api/users/:id                                          Update a user 
 POST      /api/users                                              Create a new user
 POST      /api/users/login                                        Authenticate user and get token
 DELETE    /api/users/:id                                          Delete a user. Admin only
+
 -------------------------------------------------------------------------
 Order routes :
 -------------------------------------------------------------------------
@@ -37,6 +39,7 @@ GET       /api/orders                                             Get all user o
 GET       /api/orders/:id                                         Get an order by id
 GET       /api/orders/myorders                                    Get logged in users orders
 PUT       /api/orders/:id/deliver                                 Update an order to delivered. Admin only
+
 -------------------------------------------------------------------------
 Upload route :
 -------------------------------------------------------------------------
