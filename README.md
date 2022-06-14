@@ -6,29 +6,29 @@
 
 ### Backend RESTful APIs
 ###### - Product routes :
-`GET /api/products`
-`GET /api/products/:id`
-`GET /api/products/top`
-`PUT /api/products/:id`
-`POST /api/products`
-`POST /api/products/:id/reviews`
-`DELETE api/products/:id`
+    GET /api/products
+    GET /api/products/:id
+    GET /api/products/top
+    PUT /api/products/:id
+    POST /api/products
+    POST /api/products/:id/reviews
+    DELETE api/products/:id
 ###### - User & Auth routes :
-`GET /api/users`
-`GET /api/users/:id`
-`GET /api/users/profile`
-`PUT /api/users/profile`
-`PUT /api/users/:id`
-`POST /api/users`
-`POST /api/users/login`
-`DELETE /api/users/:id`
+    GET /api/users
+    GET /api/users/:id
+    GET /api/users/profile
+    PUT /api/users/profile
+    PUT /api/users/:id
+    POST /api/users
+    POST /api/users/login
+    DELETE /api/users/:id
 ###### - Order routes :
-`GET /api/orders`
-`GET /api/orders/:id`
-`GET /api/orders/myorders`
-`PUT /api/orders/:id/deliver`
+    GET /api/orders
+    GET /api/orders/:id
+    GET /api/orders/myorders
+    PUT /api/orders/:id/deliver
 ###### - Upload route :
-`POST /api/upload`
+    POST /api/upload
 
 
 ------------
