@@ -3,7 +3,7 @@
 > Built with the MERN stack & Redux
 
 ------------
-<br />
+
 ### Backend RESTful APIs
 ###### - Product routes :
 `GET /api/products`
@@ -32,7 +32,6 @@
 
 
 ------------
-<br />
 ### Frontend Features
 
 ------------
